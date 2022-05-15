@@ -1,7 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-namespace iForceCustomerVehicleDatabase.Model
+namespace iForceCustomerVehicleDatabase.CustomerVehicleModel
 {
 
     /// <summary>
@@ -11,27 +12,35 @@ namespace iForceCustomerVehicleDatabase.Model
     public class Customer
     {
 
-        public void Setup(long id, string forename, string surname,
-            string dateOfBirth, long vehicleId, string registrationNumber, string manufacturer, string model,
-            string engineSize, string registationDate, string interiorColour)
+        public void Setup(long id, string forename, string surname, DateTime dob)
         {
             this.Id = id;
             this.Forename = forename;
             this.Surname = surname;
-            this.DOB = DateTime.Parse(dateOfBirth);
-            this.Vehicle = new Vehicle(this, vehicleId, registrationNumber, registationDate, manufacturer, model, engineSize, interiorColour);
+            this.DOB = dob;
         }
 
+        public Customer()
+        {
+
+        }
+
+        /// <summary>
+        /// Constructor with simple validation checks
+        /// CustomerId,Forename,Surname,DateOfBirth
+        /// </summary>
+        /// <param name="values"></param>
         public Customer(string[] values)
         {
-            long customerId, vehicleId;
-            if (long.TryParse(values[0], out customerId) && long.TryParse(values[4], out vehicleId))
+            long customerId;
+            DateTime dob;
+            if (long.TryParse(values[0], out customerId)  && DateTime.TryParse(values[3], out dob))
             {
-                Setup(customerId, values[1], values[2], values[3], vehicleId, values[5], values[6], values[7], values[8], values[9], values[10]);
+                Setup(customerId, values[1], values[2], dob);
             }
             else
             {
-                throw new Exception("Invalid customer id supplied");
+                throw new Exception("Invalid data supplied");
             }
         }
 
@@ -45,9 +54,23 @@ namespace iForceCustomerVehicleDatabase.Model
         [Column(TypeName = "smalldatetime")]
         public DateTime DOB;
 
-        [ForeignKey("Vehicle")]
-        public long VehicleId;
-        public Vehicle Vehicle;
+        private List<Vehicle> _Vehicles;
+
+        public List<Vehicle> Vehicles
+        {
+            get
+            {
+                if (_Vehicles == null) _Vehicles = new List<Vehicle>();
+                return _Vehicles;
+            }
+            set
+            {
+                _Vehicles = value;
+            }
+        }
+
+
+
 
 
     }

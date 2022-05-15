@@ -1,3 +1,5 @@
+using System;
+
 namespace iForceCustomerVehicleDatabase.ViewModel
 {
     public class VehicleVM
@@ -7,13 +9,13 @@ namespace iForceCustomerVehicleDatabase.ViewModel
         {
         }
 
-        public long ModelId;
-        public ModelVM Model;
+        public string Manufacturer;
+        public int EngineSize;
+        public string Model;
+        public string RegistrationNumber;
+        public DateTime RegistrationDate;
+        public string InteriorColour;
 
-        public long RegistrationId;
-        public RegistrationVM Registration;
-
-        public ColourVM InteriorColour;
 
         public long Id;
 

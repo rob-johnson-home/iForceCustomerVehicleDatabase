@@ -1,4 +1,4 @@
-﻿using iForceCustomerVehicleDatabase.Model;
+﻿using iForceCustomerVehicleDatabase.CustomerVehicleModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,6 +9,13 @@ namespace iForceCustomerVehicleDatabase.Utils
 {
     public class CSVConverter : IDataSetConverter
     {
+        /// <summary>
+        /// Creates a basic list of customer/vehicle combinations that exist in any given
+        /// csv file with no thought to the existence or otherwise of customer/vehicles already
+        /// created.
+        /// </summary>
+        /// <param name="inputStream"></param>
+        /// <returns></returns>
         public List<Customer> ReadAndDigestCustomersFromCsv(Stream inputStream)
         {
             StreamReader stream = new StreamReader(inputStream);
@@ -23,7 +30,9 @@ namespace iForceCustomerVehicleDatabase.Utils
         public Customer CustomerFromCsv(string csv)
         {
             string[] values = csv.Split(',');
-            var c = new Customer(values);
+            var c = new Customer(values[0..4]);
+            var v = new Vehicle(values[4..11]);
+            c.Vehicles.Add(v);
             return c;
         }
     }

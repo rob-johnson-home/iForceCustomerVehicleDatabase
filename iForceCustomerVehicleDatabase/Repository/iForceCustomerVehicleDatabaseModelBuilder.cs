@@ -1,9 +1,5 @@
-﻿using iForceCustomerVehicleDatabase.Model;
+﻿using iForceCustomerVehicleDatabase.CustomerVehicleModel;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace iForceCustomerVehicleDatabase.Repository
 {
@@ -14,11 +10,6 @@ namespace iForceCustomerVehicleDatabase.Repository
         {
 
             builder.Entity<Customer>();
-            builder.Entity<Colour>();
-            builder.Entity<Manufacturer>();
-            builder.Entity<Model.Model>();
-            builder.Entity<ModelColour>();
-            builder.Entity<Registration>();
             builder.Entity<Vehicle>();
 
         }

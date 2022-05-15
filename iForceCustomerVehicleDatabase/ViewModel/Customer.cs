@@ -1,5 +1,6 @@
 
 using System;
+using System.Collections.Generic;
 
 /// <summary>
 /// records the customers
@@ -17,7 +18,7 @@ namespace iForceCustomerVehicleDatabase.ViewModel
         public string Surname;
         public DateTime DOB;
         public long Id;
-        public VehicleVM Vehicle;
+        public List<VehicleVM> Vehicle;
 
     }
 }

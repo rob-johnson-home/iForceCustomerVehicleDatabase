@@ -1,18 +1,19 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using iForceCustomerVehicleDatabase.CustomerVehicleModel;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace iForceCustomerVehicleDatabase.Repository
 {
-    public class CustomerVehicleDatabaseDbContext: DbContext
+    public class CustomerVehicleDatabaseDbContext: DbContext, ICustomerVehicleDatabaseDbContext
     {
 
         public CustomerVehicleDatabaseDbContext(DbContextOptions<CustomerVehicleDatabaseDbContext> options) : base(options)
         {
 
         }
+
+        public DbSet<Vehicle> Vehicles { get ; set; }
+        public DbSet<Customer> Customers { get ; set ; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

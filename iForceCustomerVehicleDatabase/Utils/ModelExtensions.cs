@@ -1,4 +1,4 @@
-﻿using iForceCustomerVehicleDatabase.Model;
+﻿using iForceCustomerVehicleDatabase.CustomerVehicleModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;

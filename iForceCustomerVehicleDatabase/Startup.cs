@@ -29,7 +29,8 @@ namespace iForceCustomerVehicleDatabase
 
             services.AddDbContext<CustomerVehicleDatabaseDbContext>(options => options.UseSqlite("Data Source=iForceDemo.db"));
 
-            services.AddTransient(typeof(ICustomerVehicleRepo), typeof(CustomerVehicleRepo));
+            services.AddTransient(typeof(IUnitOfWork), typeof(UnitOfWork));
+
             services.AddTransient(typeof(ICustomerVehicleService), typeof(CustomerVehicleService));
 
             services.AddControllers();

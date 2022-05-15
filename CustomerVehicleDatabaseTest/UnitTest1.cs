@@ -1,38 +1,180 @@
-using iForceCustomerVehicleDatabase.Model;
+using AutoMapper;
+using iForceCustomerVehicleDatabase.CustomerVehicleModel;
+using iForceCustomerVehicleDatabase.Repository;
+using iForceCustomerVehicleDatabase.Service;
 using iForceCustomerVehicleDatabase.Utils;
+using iForceCustomerVehicleDatabase.ViewModel;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace CustomerVehicleDatabaseTest
 {
     [TestClass]
     public class UnitTest1
     {
+
+
+        //test creating a customer
         [TestMethod]
-        public void DataSetUploadTest()
+        public void CreateCustomer()
         {
-            var csvConverter = new CSVConverter();
-            System.IO.MemoryStream inputDataStream = new System.IO.MemoryStream(System.Text.Encoding.UTF8.GetBytes(demoData));
-            var result = csvConverter.ReadAndDigestCustomersFromCsv(inputDataStream);
-            Assert.IsInstanceOfType(result, typeof (List<Customer>));
+
+            var id = "1";
+            var forename = "Rob";
+            var surname = "Johnson";
+            var DOB = "01/01/2000";
+            DateTime parsedDate = DateTime.Parse(DOB);
+
+            var input = new string[] { id, forename, surname, DOB };
+
+            Customer c = new Customer(input);
+
+            Assert.AreEqual(c.Forename, forename);
+            Assert.AreEqual(c.Surname, surname);
+            Assert.AreEqual(c.DOB, parsedDate);
+
+
+
 
         }
 
+        //test creating a vehicle
+        [TestMethod]
+        public void CreateVehicle()
+        {
 
-        // here's some demo data
-        private string demoData => @"CustomerId,Forename,Surname,DateOfBirth,VehicleId,RegistrationNumber,Manufacturer,Model,EngineSize,RegistationDate,InteriorColour
-1,Joe,Bloggs,1983-04-08,1,BJ07 YUK, Renault, Clio,1290,2007-02-28, Cream
-1, Joe, Bloggs,1983-04-08,7, BJ12 UUY,Renault,Twingo,1190,2012-03-12,Grey
-2,Jane,Doe,1979-09-04,2,BT58 OKJ, Ford, Fiesta,1187,2008-10-03, Black
-3, Bob, Smith,1992-10-27,3, BJ53 WYR,Peugeot,108,987,2003-07-03,Grey
-4,Kate,Jones,1990-12-09,4,BT12 UJJ, Renault, Clio,1190,2012-05-03, Grey
-5, Ann, Banks,1987-03-10,5, BJ16 OIU,Citroen,C3,1298,2016-02-20,Black
-6,Jeff,Hope,1963-01-19,6,BT15 PLM, Renault, Megane,1380,2015-04-04, Cream
-7, Peter, SMith,1969-08-10,7, OW06 TTR,Ford,Focus,1200,2006-03-02,Red
-6,Jeff,Hope,1963-01-19,8,PS12 PLK, Audi, A6,2000,2012-09-17, Black
-6, Jeff, Hope,1963-01-19,9, SE13 CFG,Audi,A1,1610,2013-03-09,Silver
-6,Jeff,Hope,1963-01-19,10,KL16 KMN, Renault, Megane,1380,2015-07-03, White
-6, Jeff, Hope,1963-01-19,11, FD10 MMW,Renault,Megane,1380,2015-10-28,Grey";
+            var id = "1";
+            var model = "Golf";
+            var manufacturer = "VW";
+            var registrationNumber = "ABC123";
+            var registrationDate = "01/01/2000";
+            var interiorColour = "Red";
+            var engineSize = "1.5";
+
+            var input = new string[] { id, registrationNumber, manufacturer, model, engineSize, registrationDate, interiorColour };
+            Vehicle v = new Vehicle(input);
+
+            DateTime parsedDate = DateTime.Parse(registrationDate);
+            long parsedId = long.Parse(id);
+            int parsedEngineSize = (int)(decimal.Parse(engineSize) * 1000);
+
+            Assert.AreEqual(v.Id, parsedId);
+            Assert.AreEqual(v.RegistrationNumber, registrationNumber);
+            Assert.AreEqual(v.RegistrationDate, parsedDate);
+            Assert.AreEqual(v.Manufacturer, manufacturer);
+            Assert.AreEqual(v.Model, model);
+            Assert.AreEqual(v.InteriorColour, interiorColour);
+            Assert.AreEqual(v.EngineSize, parsedEngineSize);
+
+
+
+        }
+
+        //test adding a vehicle to a customer
+        [TestMethod]
+        public void AddVehicleToCustomer()
+        {
+
+            Vehicle v = new Vehicle();
+            v.Id = 1;
+            v.Model = "Golf";
+            v.Manufacturer = "VW";
+            v.RegistrationNumber = "ABC123";
+            v.RegistrationDate = DateTime.Today;
+            v.InteriorColour = "Red";
+            v.EngineSize = 1100;
+
+            Customer c = new Customer();
+            c.Id = 1;
+            c.Forename = "Rob";
+            c.Surname = "Johnson";
+            c.DOB = DateTime.Today;
+
+            c.Vehicles.Add(v);
+
+            Assert.AreEqual(c.Vehicles.Count, 1);
+
+
+
+        }
+
+        //test adding 2 vehicle s to a customer
+        [TestMethod]
+        public void AddTwoVehiclesToCustomer()
+        {
+            Vehicle v = new Vehicle();
+            v.Id = 1;
+            v.Model = "Golf";
+            v.Manufacturer = "VW";
+            v.RegistrationNumber = "ABC123";
+            v.RegistrationDate = DateTime.Today;
+            v.InteriorColour = "Red";
+            v.EngineSize = 1100;
+
+            Vehicle vv = new Vehicle();
+            vv.Id = 2;
+            vv.Model = "Golf";
+            vv.Manufacturer = "VW";
+            vv.RegistrationNumber = "ABC123";
+            vv.RegistrationDate = DateTime.Today;
+            vv.InteriorColour = "Red";
+            v.EngineSize = 1500;
+
+            Customer c = new Customer();
+            c.Id = 1;
+            c.Forename = "Rob";
+            c.Surname = "Johnson";
+            c.DOB = DateTime.Today;
+
+            c.Vehicles.Add(v);
+            c.Vehicles.Add(vv);
+
+            Assert.AreEqual(c.Vehicles.Count, 2);
+
+        }
+
+        //test customer repo 1
+        [TestMethod]
+        public void CustomerRepo1()
+        {
+            
+            Customer c = new Customer();
+            c.Id = 1;
+            c.Forename = "Rob";
+            c.Surname = "Johnson";
+            c.DOB = DateTime.Today;
+
+            Customer cc = new Customer();
+            c.Id = 2;
+            c.Forename = "Sue";
+            c.Surname = "Johnson";
+            c.DOB = DateTime.Today;
+
+            var customerSet = new List<Customer> { c,cc}.AsQueryable();
+
+            var mockSet = new Mock<DbSet<Customer>>();
+            mockSet.As<IQueryable<Customer>>().Setup(m => m.Provider).Returns(customerSet.Provider);
+            mockSet.As<IQueryable<Customer>>().Setup(m => m.Expression).Returns(customerSet.Expression);
+            mockSet.As<IQueryable<Customer>>().Setup(m => m.ElementType).Returns(customerSet.ElementType);
+            mockSet.As<IQueryable<Customer>>().Setup(m => m.GetEnumerator()).Returns(customerSet.GetEnumerator());
+
+
+            Mock<ICustomerVehicleDatabaseDbContext> _context = new Mock<ICustomerVehicleDatabaseDbContext>();
+
+            _context.Setup(c => c.Customers).Returns(mockSet.Object);
+
+             CustomerRepo _repo = new CustomerRepo(_context.Object);
+
+            var customers = _repo.GetCustomers();
+
+            Assert.AreEqual(customers.Count, 2);
+
+        }
+
     }
 }
